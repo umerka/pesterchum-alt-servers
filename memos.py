@@ -3,6 +3,8 @@ import re
 from string import Template
 from datetime import timedelta, datetime
 
+HAS_INITALS = False
+
 try:
     from PyQt6 import QtCore, QtGui, QtWidgets
     from PyQt6.QtGui import QAction
@@ -375,7 +377,16 @@ class MemoText(PesterText):
         if not match or detected_initials != initials:
             if chum is me:
                 color = me.colorcmd()
-                msg = f"<c={color}>{initials}: {msg}</c>"
+
+                if initials == "DC":
+                    msg = f"<c={color}>{msg}</c>"
+                else:
+                    if HAS_INITALS == True:
+                        msg = f"<c={color}>{initials}: {msg}</c>"
+                    else:
+                        msg = f"<c={color}>{msg}</c>"
+
+
                 msg = addTimeInitial(msg, parent.time.getGrammar())
             else:
                 color = window.chumdb.getColor(chum.handle)
@@ -384,8 +395,15 @@ class MemoText(PesterText):
                     color = f"{r},{g},{b}"
                 else:
                     color = "0,0,0"
-                msg = f"<c={color}>{initials}: {msg}</c>"
+                if initials == "DC":
+                    msg = f"<c={color}>{msg}</c>"
+                else:
+                    if HAS_INITALS == True:
+                        msg = f"<c={color}>{initials}: {msg}</c>"
+                    else:
+                        msg = f"<c={color}>{msg}</c>"
                 msg = addTimeInitial(msg, parent.times[chum.handle].getGrammar())
+            print(msg)
         return msg
 
     def addMessage(self, msg, chum):
