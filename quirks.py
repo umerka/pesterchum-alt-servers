@@ -4,6 +4,7 @@ import math
 import random
 import logging
 import itertools
+import quirk
 
 import ostools
 from mispeller import mispeller
@@ -60,7 +61,7 @@ class PesterQuirk:
 
         self.checkstate = self.quirk.get(
             "checkstate", 0
-        )  ## Seems to be somethign related to the QT checkbox? QtCore.QT.CheckState
+        )  # Seems to be somethign related to the QT checkbox? QtCore.QT.CheckState
 
     def apply(self, string: str, first: bool = False, last: bool = False):
         """string: string to operate quirk on. first: is the given substring at the very start (is_first_string) of the superstring? last: is the given substring at the very last (idx == -1) of the superstring?"""
@@ -84,7 +85,7 @@ class PrefixPesterQuirk(PesterQuirk):
         super().__init__(quirk)
 
     def _apply(self, string: str, first: bool, last: bool):
-        return self.quirk["value"] + string
+        return self.quirk["value"] + quirk.quirk(string)
 
     def __str__(self):
         return "BEGIN WITH: %s" % (self.quirk["value"])

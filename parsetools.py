@@ -4,6 +4,8 @@ import collections
 from copy import copy
 from datetime import timedelta
 
+HAS_HANDLE = True
+
 try:
     from PyQt6 import QtGui, QtWidgets
 except ImportError:
@@ -925,11 +927,19 @@ def kxhandleInput(ctx, text=None, flavor=None, irc_compatible=False):
             # We fetched the information outside of the loop, so just
             # construct the messages.
 
-            clientMsg = "<c={1}>{2}{3}{4}: {0}</c>".format(
-                clientMsg, colorcmd, grammar.pcf, initials, grammar.number
-            )
-            # Not sure if this needs a space at the end...?
-            serverMsg = f"<c={colorcmd}>{initials}: {serverMsg}</c>"
+            if initials == "DS" or initials == "SW":
+                HAS_HANDLE = False
+
+            if HAS_HANDLE:
+                clientMsg = f"<c={colorcmd}>{grammar.pcf}{initials}{grammar.number}: {clientMsg}</c>"
+            else:
+                clientMsg = f"<c={colorcmd}>{clientMsg}</c>"
+
+            if HAS_HANDLE:
+                serverMsg = f"<c={colorcmd}>{initials}: {serverMsg}</c>"
+            else:
+                serverMsg= f"<c={colorcmd}>{serverMsg}</c>"
+
 
         ctx.addMessage(clientMsg, True)
         if flavor != "menus":
